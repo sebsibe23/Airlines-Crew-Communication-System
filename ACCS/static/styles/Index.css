@@ -1,0 +1,277 @@
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: #ffffff;
+        }
+    
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 80%;
+            height: 80%;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #1e1e1e;
+        }
+    
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #2e3b4e;
+            border-bottom: 1px solid #3a4b61;
+            position: relative;
+        }
+    
+        .header .title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            color: #ffab40;
+        }
+    
+        .header .profile {
+            display: flex;
+            align-items: center;
+        }
+    
+        .header .profile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+    
+        .header .profile span {
+            color: #ffffff;
+        }
+    
+        .chat-list {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+    
+        #chats {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 30%;
+            background-color: #2e3b4e;
+            border-right: 1px solid #3a4b61;
+            overflow-y: auto;
+            border-radius: 0 0 0 15px;
+        }
+    
+        #chats li {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #3a4b61;
+            transition: background-color 0.3s, color 0.3s;
+            color: #ffffff;
+        }
+    
+        #chats li:hover {
+            background-color: #3a4b61;
+            color: #ffffff;
+        }
+    
+        #chats li.active {
+            background-color: #1e2a38;
+            color: #ffffff;
+        }
+    
+        #messages-container {
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+            background-color: #1e1e1e;
+        }
+    
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            background-color: #2e2e2e;
+        }
+    
+        #messages li {
+            padding: 10px;
+            border-bottom: 1px solid #3a3a3a;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #ffffff;
+        }
+    
+        #messages li:hover {
+            background-color: #3a3a3a;
+        }
+    
+        #messages li:hover .message-detail {
+            display: block;
+        }
+    
+        .message-detail {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e1e1e;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #3a3a3a;
+            padding: 10px;
+            border-radius: 4px;
+            z-index: 1000;
+            width: 200px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #ffffff;
+        }
+    
+        .message-detail p {
+            margin: 0;
+            padding: 4px 0;
+        }
+    
+        .message-detail::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #3a3a3a transparent;
+        }
+    
+        #message-form {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #2e2e2e;
+            border-top: 1px solid #3a3a3a;
+        }
+    
+        #message-input {
+            flex: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #3a3a3a;
+            border-radius: 4px;
+            outline: none;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            transition: border-color 0.3s;
+        }
+    
+        #message-input:focus {
+            border-color: #ff6600;
+        }
+    
+        #file-label {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #ff6600;
+            color: #ffffff;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+    
+        #file-label:hover {
+            background-color: #e65c00;
+        }
+    
+        #file-input {
+            display: none;
+        }
+    
+        #drop-area {
+            border: 2px dashed #ccc;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+    
+        #drop-area.active {
+            background-color: #ff6600;
+            color: #ffffff;
+        }
+    
+        .tooltip {
+            position: absolute;
+            background-color: #1e1e1e;
+            border: 1px solid #3a3a3a;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+            pointer-events: none;
+            color: #ffffff;
+        }
+
+    
+
+        /* Profile and Menu */
+        .profile {
+            position: relative;
+            padding: 10px;
+            color: #fff;
+            cursor: pointer;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            text-align: center;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .profile:hover .menu-bar {
+            display: block;
+        }
+
+        .menu-bar {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            background-color: #3a4b61;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            z-index: 1000;
+             width: 150px;
+        }
+
+        .menu-bar a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .menu-bar a:hover {
+            background-color: #4c5d77;
+        }

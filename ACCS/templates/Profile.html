@@ -1,0 +1,21 @@
+<aside>
+    <div class="header">
+        <div class="title">Airlines Crew Communication System</div>
+        <div class="profile">
+            P
+            <div class="menu-bar">
+                <a href="#profile">Profile</a>
+                <a href="#settings">Settings</a>
+                    {% if session['Privilege'] == 'Admin' %}
+                    <a href="{{url_for('get_chats')}}">Replay</a>
+                        <a href="{{url_for('register')}}">New User</a>
+                        <a href="{{url_for('search')}}">search</a>
+                        <a href="{{url_for('resetUserpassword')}}">Rest User Password</a>
+                    {% endif %}
+
+				       <a href="{{url_for('resetpassword')}}">Rest Password</a>
+				       <a href="{{url_for('logout')}}">logout</a>
+            </div>
+        </div>
+    </div>
+</aside>

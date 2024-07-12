@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration - Airlines Crew Communication System</title>
+        <link rel="stylesheet" href="../static/styles/register.css">
+</head>
+<body>
+    <div class="container">
+    {% include 'Profile.html' %}
+        <main>
+            <h2>User Registration</h2>
+    
+            <form action="{{ url_for('register') }}" method="post">
+                <table>
+                    <tr>
+                        <td><label for="name">Name:</label></td>
+                        <td><input type="text" id="name" name="name" placeholder="Enter name"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="username">User Name:</label></td>
+                        <td><input type="text" id="username" name="username" placeholder="Enter user name"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="email">Email:</label></td>
+                        <td><input type="email" id="email" name="email" placeholder="Enter email"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password">Password:</label></td>
+                        <td><input type="password" id="password" name="password"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="Privilege">Privilege:</label></td>
+                        <td>
+                            <select name="Privilege" id="Privilege">
+                                <option value="">Select Privilege</option>
+                                <option value="Admin">Admin</option>
+                                <option value="BackOffice">BackOffice</option>
+                                
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="AccStatus">Account Status:</label></td>
+                        <td>
+                            <select name="AccStatus" id="AccStatus">
+                                <option value="">Select Account Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Locked">Locked</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+                    {% include 'Message.Html' %}
+        </main>
+    </div>
+</body>
+</html>

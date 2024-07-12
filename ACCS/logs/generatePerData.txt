@@ -1,0 +1,21 @@
+LoginUser.html
+The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.
+The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.
+The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.
+The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.
+The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.
+The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.
+Could not build url for endpoint 'ActualPerdiem'. Did you mean 'update_user' instead?
+'dict object' has no attribute 'user_id'
+'dict object' has no attribute 'user_id'
+'dict object' has no attribute 'user_id'
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?
+Could not build url for endpoint 'chats'. Did you mean 'get_chats' instead?

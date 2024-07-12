@@ -1,0 +1,15 @@
+
+
+{% if message is defined and message %}
+  {% if "Error" in message %}
+    <div class="alert alert-warning" role="alert"
+      style="text-align: center; background-color: #fff3cd; border-color: #ffeeba; color: #856404; padding: 10px;">
+      <strong>Error:</strong> {{ message }}
+    </div>
+  {% else %}
+    <div class="alert alert-success" role="alert"
+      style="text-align: center; background-color: #d4edda; border-color: #c3e6cb; color: #155724; padding: 10px;">
+      <strong>Success:</strong> {{ message }}
+    </div>
+  {% endif %}
+{% endif %}

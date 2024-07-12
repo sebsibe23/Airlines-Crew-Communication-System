@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search User - Airlines Crew Communication System</title>
+    <link rel="stylesheet" href="../static/styles/resetUserpassword.css">
+</head>
+<body>
+    <div class="container">
+    {% include 'Profile.html' %}
+            <main>
+                <h2>Search User</h2>
+                {% include 'Message.Html' %}
+                <form action="{{ url_for('search') }}" method="post">
+                    <table>
+                        <tr class="table-dark">
+                            <td>
+                                <input type="text" name="search_query" placeholder="Search by user name">
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

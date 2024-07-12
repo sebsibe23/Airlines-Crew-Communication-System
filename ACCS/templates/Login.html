@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Airlines Crew Communication System</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            text-align: center;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 75vh;
+            justify-content: center;
+            align-items: center;
+        }
+        .header {
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #bbbbbb;
+        }
+        .login-box {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            width: 300px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .login-box h3 {
+            margin-top: 0;
+            color: #ffab40;
+            text-align: center;
+        }
+        .login-box label {
+            display: block;
+            margin: 15px 0 5px;
+        }
+        .login-box input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: none;
+            border-radius: 5px;
+            background: #333333;
+            color: #ffffff;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #ff6600;
+            color: #ffffff;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .login-box button:hover {
+            background: #e65c00;
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #bbbbbb;
+            text-align: center;
+            padding: 20px 0;
+            background: #1e1e1e;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Airlines Crew Communication System</h1>
+            <p>Login to your account</p>
+        </div>
+        <div class="login-box">
+            <h3>Login</h3>
+            <form action="{{ url_for('login') }}" method="post">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter user name">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter password">
+                <button type="submit">Login</button>
+                {% include 'Message.Html' %}
+            </form>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Airlines Crew Communication System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

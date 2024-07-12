@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airlines Crew Communication System</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            text-align: center;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 75vh;
+        }
+        .header {
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #bbbbbb;
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
+        .feature {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            width: 250px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        .feature:hover {
+            transform: translateY(-10px);
+        }
+        .feature h3 {
+            margin-top: 0;
+            color: #ffab40;
+        }
+        .cta {
+            margin-top: 50px;
+        }
+        .cta a {
+            background: #ff6600;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.3em;
+            transition: background 0.3s;
+        }
+        .cta a:hover {
+            background: #e65c00;
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #bbbbbb;
+            text-align: center;
+            padding: 20px 0;
+            background: #1e1e1e;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Airlines Crew Communication System</h1>
+            <p>Efficient, reliable, and secure communication for airline crew members</p>
+        </div>
+        <div class="features">
+            <div class="feature">
+                <h3>Real-time Messaging</h3>
+                <p>Stay connected with your crew through instant messaging.</p>
+            </div>
+            <div class="feature">
+                <h3>Global Reach</h3>
+                <p>Communicate internationally with ease using our Telegram bot integration.</p>
+            </div>
+            <div class="feature">
+                <h3>Local Communication</h3>
+                <p>Use the Kannel SMS gateway for reliable local communication.</p>
+            </div>
+            <div class="feature">
+                <h3>User-Friendly Interface</h3>
+                <p>Experience a seamless and intuitive interface for all communication needs.</p>
+            </div>
+        </div>
+        <div class="cta">
+            <a href="{{url_for('login')}}">Get Started</a>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Airlines Crew Communication System. All rights reserved.</p>
+    </footer>
+</body>
+</html>
