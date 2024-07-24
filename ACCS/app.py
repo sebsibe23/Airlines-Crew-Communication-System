@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-NODE_API_URL = "http://localhost:3000"
+NODE_API_URL = "http://localhost:3001"
 conn_str = (
     'DRIVER={SQL Server};'
     'SERVER=SVDCPRD01;'

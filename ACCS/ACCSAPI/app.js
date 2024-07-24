@@ -1,7 +1,8 @@
 const express = require('express');
-const app = express();
-const port = 3000;
 const bodyParser = require('body-parser');
+
+const app = express();
+const port = 3001;
 
 app.use(bodyParser.json());
 
@@ -12,7 +13,8 @@ const resetPasswordRoute = require('./routes/resetPassword');
 const updateUserRoute = require('./routes/updateUser');
 const registerRoute = require('./routes/register');
 const telegramBotRoute = require('./routes/telegramBot');
-const getCrewOnBoardRoute = require('./routes/getCrewOnBoard'); // Import new route
+//const crewOnBoardRoute = require('./routes/crewOnBoard');
+
 
 // Use routes
 app.use('/login', loginRoute);
@@ -21,8 +23,10 @@ app.use('/resetpassword', resetPasswordRoute);
 app.use('/update_user', updateUserRoute);
 app.use('/register', registerRoute);
 app.use('/telegram_bot', telegramBotRoute);
-app.use('/getCrewOnBoard', getCrewOnBoardRoute); // Use new route
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+module.exports = app; // Export the Express app
