@@ -2,7 +2,7 @@ const express = require('express');
 const db = require('../config/database');
 const router = express.Router();
 
-router.post('/', (req, res) => {
+router.get('/', (req, res) => {
   const { search_query } = req.body;
   db.query('SELECT * FROM user WHERE username LIKE ?', [`%${search_query}%`], (err, results) => {
     if (err) {
