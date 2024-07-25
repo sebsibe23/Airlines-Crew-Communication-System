@@ -10,19 +10,15 @@
 
 <body>
     <div class="container">
-{% include 'Profile.html' %}
+        {% include 'Profile.html' %}
         <div class="chat-list">
             <ul id="chats"></ul>
             <div id="messages-container">
                 <ul id="messages"></ul>
                 <form id="message-form">
-                    <input type="text" id="message-input" autocomplete="off"
-                        placeholder="Type a message or attach a file..." />
-                    <label for="file-input" id="file-label">Attach File</label>
-                    <input type="file" id="file-input" />
+                    <input type="text" id="message-input" autocomplete="off" placeholder="Type a message..." />
                     <button type="submit">Send</button>
                 </form>
-                <div id="drop-area">Drop files here</div>
             </div>
         </div>
         <div class="tooltip" id="tooltip"></div>
@@ -34,7 +30,7 @@
         const tooltip = document.getElementById('tooltip');
         let currentChatId = null;
 
-        //Load chats
+        // Load chats
         function loadChats() {
             fetch('/chats')
                 .then(response => response.json())
@@ -42,54 +38,40 @@
                     chatsList.innerHTML = '';
                     chats.forEach(chat => {
                         const li = document.createElement('li');
-                        li.textContent = `${chat.empNumber} (${chat.unread_count})`;
+                        li.textContent = `${chat.empNumber} ( ${chat.unread_count})`;
                         li.className = chat.unread_count > 0 ? 'unread' : '';
-                        li.dataset.empNo_sequence = chat.empNo_sequence;
+                        li.dataset.empNumber = chat.empNumber;
                         chatsList.appendChild(li);
                     });
                 });
         }
 
-
-        /* Load chats
-        function loadChats() {
-            fetch('/chats')
-                .then(response => response.json())
-                .then(chats => {
-                    chatsList.innerHTML = '';
-                    chats.forEach(chat => {
-                        const li = document.createElement('li');
-                        li.textContent = `Chat with ${chat.empNumber} (${chat.unread_count} unread messages)`;
-                        li.className = chat.unread_count > 0 ? 'unread' : '';
-                        li.dataset.empNo_sequence = chat.empNo_sequence;
-                        chatsList.appendChild(li);
-                    });
-                });
-        }
-    */
         chatsList.addEventListener('click', (e) => {
             const li = e.target.closest('li');
-            const empNo_sequence = li.dataset.empNo_sequence;
+            const empNumber = li.dataset.empNumber;
 
-            if (empNo_sequence) {
-                currentChatId = empNo_sequence;
+            if (empNumber) {
+                currentChatId = empNumber;
 
-                fetch(`/messages/${empNo_sequence}`)
+                fetch(`/messages/${empNumber}`)
                     .then(response => response.json())
                     .then(messages => {
                         messagesList.innerHTML = '';
                         messages.forEach(msg => {
                             const li = document.createElement('li');
+                            li.className = 'message ' + (msg.messageType === 'sent' ? 'sent' : 'received');
                             li.innerHTML = `
-                                <span class="empNumber" data-emp-number="${msg.empNumber}" data-phone="${msg.phone}" data-crewqual="${msg.crewqual}" data-crewcat="${msg.crewcat}">${msg.empNumber}</span>: ${msg.txtMsg}
-                                <div class="message-detail">
-                                    <p><strong>Employee Number:</strong> ${msg.empNumber}</p>
-                                    <p><strong>Phone:</strong> ${msg.phone}</p>
-                                    <p><strong>Crew Qualification:</strong> ${msg.crewqual}</p>
-                                    <p><strong>Crew Category:</strong> ${msg.crewcat}</p>
-                                </div>
+                                <span>${msg.messageType === 'sent' ? 'You' : msg.empNumber}</span>: ${msg.txtMsg}
+                                ${msg.messageType !== 'sent' ? `
+                                    <div class="message-detail">
+                                        <p><strong>Employee Number:</strong> ${msg.empNumber}</p>
+                                        <p><strong>Phone:</strong> ${msg.phone}</p>
+                                        <p><strong>Crew Qualification:</strong> ${msg.crewqual}</p>
+                                        <p><strong>Crew Category:</strong> ${msg.crewcat}</p>
+                                        ${msg.Reply ? `<p><strong>Reply:</strong> ${msg.Reply}</p>` : ''}
+                                    </div>
+                                ` : ''}
                             `;
-                            li.className = msg.Reply === null ? 'unread' : '';
                             messagesList.appendChild(li);
                         });
                         messagesList.scrollTop = messagesList.scrollHeight;
@@ -97,22 +79,19 @@
             }
         });
 
+        // Event listeners for tooltip
         chatsList.addEventListener('mouseover', (e) => {
             const li = e.target.closest('li');
-            const empNo_sequence = li.dataset.empNo_sequence;
+            const empNumber = li.dataset.empNumber;
 
-            if (empNo_sequence) {
-                fetch(`/messages/${empNo_sequence}`)
+            if (empNumber) {
+                fetch(`/ChatDetail/${empNumber}`)
                     .then(response => response.json())
                     .then(messages => {
                         tooltip.innerHTML = '';
                         messages.forEach(msg => {
                             const p = document.createElement('p');
-                            if (msg.msgtaype === 'file') {
-                                p.innerHTML = `<a href="/uploads/${msg.txtMsg}" target="_blank">${msg.txtMsg}</a>`;
-                            } else {
-                                p.textContent = `${msg.empNumber}: ${msg.txtMsg}`;
-                            }
+                            p.textContent = `${msg.empNumber}: ${msg.txtMsg}`;
                             tooltip.appendChild(p);
                         });
                         tooltip.style.display = 'block';
@@ -125,111 +104,53 @@
         chatsList.addEventListener('mouseout', () => {
             tooltip.style.display = 'none';
         });
-        //send message
+
+        // Send message
         document.getElementById('message-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const input = document.getElementById('message-input').value.trim();
-            const fileInput = document.getElementById('file-input');
 
-            if (input === '' && fileInput.files.length === 0) {
-                alert('Please enter a message or attach a file.');
+            if (input === '') {
+                alert('Please enter a message.');
                 return;
             }
 
             if (currentChatId) {
                 const formData = new FormData();
-                formData.append('empNo_sequence', currentChatId);
+                formData.append('id', currentChatId);
+                formData.append('message', input);
 
-                if (input !== '') {
-                    formData.append('message', input);
-                }
-
-                if (fileInput.files.length > 0) {
-                    formData.append('file', fileInput.files[0]);
-                }
-
-                fetch('/send_message_or_file', {
+                fetch('/send_message', {
                     method: 'POST',
                     body: formData,
                 })
                     .then(response => response.json())
                     .then(result => {
                         if (result.success) {
-                            if (input !== '') {
-                                const li = document.createElement('li');
-                                li.textContent = `You: ${input}`;
-                                messagesList.appendChild(li);
-                            }
-
-                            if (fileInput.files.length > 0) {
-                                const li = document.createElement('li');
-                                li.innerHTML = `
-                            <div style="display: flex; align-items: center;">
-                                <div style="margin-right: 10px;">
-                                    <img src="/static/file_icon.png" alt="File Icon" style="width: 20px; height: 20px;">
-                                </div>
-                                <div>
-                                    <a href="/uploads/${fileInput.files[0].name}" target="_blank">${fileInput.files[0].name}</a>
-                                </div>
-                            </div>
-                        `;
-                                messagesList.appendChild(li);
-                            }
+                            const li = document.createElement('li');
+                            li.className = 'message sent';
+                            li.innerHTML = `
+                                <span>You</span>: ${input}
+                            `;
+                            messagesList.appendChild(li);
 
                             messagesList.scrollTop = messagesList.scrollHeight;
                             document.getElementById('message-input').value = '';
-                            fileInput.value = '';
                         } else {
-                            alert('Failed to send message or file');
+                            alert('Failed to send message');
                         }
                     })
                     .catch(error => {
-                        console.error('Error sending message or file:', error);
-                        alert('Failed to send message or file');
+                        console.error('Error sending message:', error);
+                        alert('Failed to send message');
                     });
             } else {
                 alert('Please select a chat');
             }
         });
 
-        // File input change event
-        document.getElementById('file-input').addEventListener('change', handleFileSelect);
-
-        // Drop area events
-        const dropArea = document.getElementById('drop-area');
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        dropArea.addEventListener('drop', handleDrop);
-
-        function handleFileSelect(e) {
-            const fileList = e.target.files;
-            handleFiles(fileList);
-        }
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const fileList = dt.files;
-            handleFiles(fileList);
-        }
-
-        function handleFiles(files) {
-            const fileInput = document.getElementById('file-input');
-            fileInput.files = files;
-            if (files.length > 0) {
-                document.getElementById('message-input').value = files[0].name;
-            }
-        }
-        //
         loadChats();
-        setInterval(loadChats, 30000);
-
+        setInterval(loadChats, 1000);
     </script>
 </body>
 
