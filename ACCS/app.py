@@ -4,7 +4,8 @@ from db import get_mysql_connection
 import pyodbc
 import os
 from werkzeug.utils import secure_filename
-
+from db import get_mysql_connection
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
@@ -12,9 +13,9 @@ app.secret_key = "your_secret_key"
 NODE_API_URL = "http://localhost:3001"
 conn_str = (
     'DRIVER={SQL Server};'
-    'SERVER=SVDCPRD01;'
-    'DATABASE=FlightOPSPortalDB;'
-    'UID=ops_user;'
+    'SERVER=localhost;'
+    'DATABASE=root;'
+    'UID=root;'
     'PWD=ops@2021'
 )
 
@@ -23,6 +24,7 @@ def get_db_connection():
 @app.route('/')
 def index():
     return render_template('LandingPage.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -54,7 +56,18 @@ def login():
         print(f"An error occurred: {e}")
         message = "Error: An error occurred. Please try again later."
         return render_template("Login.html", message=message)
-
+@app.route('/ChatUrl', methods=['GET', 'POST'])
+def ChatPageDisplay():
+    if "loggedin" not in session or ("Privilege" not in session or session["Privilege"] != "Admin"):
+        return redirect(url_for("login"))
+    try:
+        
+        return render_template("Index.html")
+    except Exception as e:
+        print(f"Error updating user: {e}")
+        message = "Error : An error occurred while updating the user. " + str(e)
+        return render_template("Login.html", message=message)
+    
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if "loggedin" not in session or ("Privilege" not in session or session["Privilege"] != "Admin"):
@@ -211,111 +224,69 @@ def logout():
 
 @app.route('/chats', methods=['GET'])
 def get_chats():
-    query = """
-        SELECT DISTINCT TOP 100 empNo_sequence, empNumber, crewqual, crewcat,
-               COUNT(CASE WHEN Reply IS NULL THEN 1 END) AS unread_count,
-               MAX(msgTimeStamp) AS max_timestamp
-        FROM dbo.tblFreeText
-        GROUP BY empNo_sequence, empNumber, crewqual, crewcat
-        ORDER BY max_timestamp DESC
-    """
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(query)
-    rows = cursor.fetchall()
-    conn.close()
+    node_service_url = f"{NODE_API_URL}/UnrepliedCrewchatCount"
     
-    chats = []
-    for row in rows:
-        chats.append({
-            'empNo_sequence': row[0],
-            'empNumber': row[1],
-            'crewqual': row[2],
-            'crewcat': row[3],
-            'unread_count': row[4]
-        })
-    
-    return jsonify(chats)
-
-@app.route('/messages/<path:empNo_sequence>', methods=['GET'])
-def get_messages(empNo_sequence):
-    query = """
-        SELECT empNumber, phone, txtMsg, msgTimeStamp, sentBy, msgSentStatus, 
-            sequence, isfromEt, empSign, crewqual, crewcat, 
-            msgtaype, fltno, msgDeliveredTimeStamp, Reply, 
-            Repliedby, Repliedon, ReplyDeliveredon
-        FROM dbo.tblFreeText
-        WHERE empNo_sequence = ?
-        ORDER BY msgTimeStamp ASC
-    """
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(query, (empNo_sequence,))
-    rows = cursor.fetchall()
-    conn.close()
-    
-    messages = []
-    for row in rows:
-        messages.append({
-            'empNumber': row[0],
-            'phone': row[1],
-            'txtMsg': row[2],
-            'msgTimeStamp': row[3],
-            'sentBy': row[4],
-            'msgSentStatus': row[5],
-            'sequence': row[6],
-            'isfromEt': row[7],
-            'empSign': row[8],
-            'crewqual': row[9],
-            'crewcat': row[10],
-            'msgtaype': row[11],
-            'fltno': row[12],
-            'msgDeliveredTimeStamp': row[13],
-            'Reply': row[14],
-            'Repliedby': row[15],
-            'Repliedon': row[16],
-            'ReplyDeliveredon': row[17]
-        })
+    try:
+        response = requests.get(node_service_url)
+        response.raise_for_status() 
+        messages = response.json() 
+    except requests.RequestException as e:
+            return jsonify({'error': str(e)}), 500
     
     return jsonify(messages)
 
+   
 
-@app.route('/send_message_or_file', methods=['POST'])
-def send_message_or_file():
+    
+@app.route('/messages/<empNumber>', methods=['GET'])
+def get_messages(empNumber):
+    payload = {'empNumber': empNumber}
+    node_service_url = f"{NODE_API_URL}/messages"
+    try:
+        response = requests.get(node_service_url, json=payload)
+        response.raise_for_status() 
+        messages = response.json()
+        return jsonify(messages)  
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+@app.route('/ChatDetail/<empNumber>', methods=['GET'])
+def get_chat(empNumber):
+    payload = {'empNumber': empNumber}
+    node_service_url = f"{NODE_API_URL}/chatDetail"
+    
+    try:
+        response = requests.get(node_service_url, json=payload)
+        response.raise_for_status() 
+        messages = response.json() 
+    except requests.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+    
+    return jsonify(messages)
+        
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    user = session.get("username")
     data = request.form
-    empNo_sequence = data['empNo_sequence']
-    message = data.get('message', '')
-    
-    file = request.files.get('file')
-    
-    if message or file:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        if message:
-            query_message = """
-                INSERT INTO dbo.tblFreeText (empNo_sequence, txtMsg, sentBy, msgTimeStamp)
-                VALUES (?, ?, ?, GETDATE())
-            """
-            cursor.execute(query_message, (empNo_sequence, message, 'Current User'))
-        
-        if file:
-            filename = secure_filename(file.filename)
-            file_path = os.path.join('uploads', filename)
-            file.save(file_path)
-            
-            query_file = """
-                INSERT INTO dbo.tblFreeText (empNo_sequence, txtMsg, sentBy, msgTimeStamp, msgtaype)
-                VALUES (?, ?, ?, GETDATE(), 'file')
-            """
-            cursor.execute(query_file, (empNo_sequence, filename, 'Current User'))
-        
-        conn.commit()
-        conn.close()
-        
-        return jsonify({'success': True, 'message': 'Message or file sent successfully'})
-    else:
-        return jsonify({'success': False, 'message': 'No message or file provided'})
+    empNumber = data.get('id')
+    message = data.get('message')
 
+    if message:
+        try:
+            payload = {
+                'empNumber': empNumber,
+                'message': message,
+                'username': user
+            }
+          
+            response = requests.post(f"{NODE_API_URL}/sendMessage", json=payload)
+            if response.status_code == 200:
+                return jsonify({'success': True, 'message': 'Message sent successfully'})
+            else:
+                return jsonify({'success': False, 'message': 'Failed to send message', 'error': response.text})
+        except Exception as e:
+            return jsonify({'success': False, 'message': 'An error occurred', 'error': str(e)})
+    else:
+        return jsonify({'success': False, 'message': 'No message provided'})   
+    
 if __name__ == '__main__':
     app.run(debug=True ,port=25000)

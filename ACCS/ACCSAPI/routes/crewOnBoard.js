@@ -1,6 +1,24 @@
 const axios = require('axios');
 const xml2js = require('xml2js');
 const { format } = require('date-fns');
+const express = require('express');
+const router = express.Router();
+
+router.get('/', async (req, res) => {
+    const { flightNumber, startDT, departureAirport } = req.body;
+
+    if (!flightNumber || !startDT || !departureAirport) {
+        return res.status(400).send('Missing required parameters');
+    }
+
+    try {
+        const crewList = await getCrewOnBoard(flightNumber, startDT, departureAirport);
+        res.send(crewList);
+    } catch (error) {
+        console.error("Error fetching crew list:", error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 async function getCrewOnBoard(flightNumber, startDT, departureAirport) {
     const departureTime = format(new Date(startDT), 'ddMMMyyyy').toUpperCase();
@@ -46,7 +64,7 @@ async function getCrewOnBoard(flightNumber, startDT, departureAirport) {
         </s:Body>
     </s:Envelope>`;
 
-    console.log("Request Payload:", requestData); // Debugging the request payload
+   // console.log("Request Payload:", requestData); // Debugging the request payload
 
     try {
         const response = await axios.post(`${baseURL}streaming`, requestData, {
@@ -56,12 +74,12 @@ async function getCrewOnBoard(flightNumber, startDT, departureAirport) {
             }
         });
 
-        console.log("Response Data:", response.data); // Log the full response data
+        //console.log("Response Data:", response.data); // Log the full response data
 
         const parser = new xml2js.Parser();
         const result = await parser.parseStringPromise(response.data);
 
-        console.log("Parsed Response:", result); // Log the parsed response
+       // console.log("Parsed Response:", result); // Log the parsed response
 
         const ns11 = 'http://stl.sabre.com/AirCrews/CrewManager10/CommonDataTypes/v10';
         const ns17 = 'http://stl.sabre.com/AirCrews/CrewManager10/CrewRosterService/v10';
@@ -88,9 +106,10 @@ async function getCrewOnBoard(flightNumber, startDT, departureAirport) {
         return crewd;
     } catch (error) {
         console.error("Error:", error);
-        return error.toString();
+        return 'Sorry no Crew list found';
     }
 }
 
 
-module.exports = { getCrewOnBoard };
+module.exports = router;
+module.exports.getCrewOnBoard = getCrewOnBoard;

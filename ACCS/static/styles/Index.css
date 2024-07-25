@@ -275,3 +275,44 @@
         .menu-bar a:hover {
             background-color: #4c5d77;
         }
+        .message {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+        }
+
+        .message.received {
+            align-items: flex-start;
+            background-color: #5a5858;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .message.sent {
+            align-items: flex-end;
+            background-color: #090e09;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .message-detail {
+            display: none;
+        }
+
+        .message:hover .message-detail {
+            display: block;
+        }
+          #message-form button {
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            border: none; /* Remove borders */
+            padding: 10px 20px; /* Add some padding */
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Make the button inline-block */
+            font-size: 16px; /* Increase font size */
+            margin: 4px 2px; /* Add some margin */
+            cursor: pointer; /* Add a pointer cursor on hover */
+            border-radius: 12px; /* Rounded corners */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
