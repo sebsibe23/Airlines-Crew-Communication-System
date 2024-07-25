@@ -99,7 +99,7 @@ async function botReg(STRempID, txtMsg, strchatId, strTEL_USERNAME) {
     const firstName = crew["ns11:CrewPersonalInfo"]?.["$"]?.["firstName"] ?? "N/A";
     
      await new Promise((resolve, reject) => {
-        db.query('INSERT INTO CrewSchedulingOffice_bot_UserDetail (crewcat, CrewQual, EMPNO, logtime, phone, text, chatId, empsign, RECID, TEL_USERNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        db.query('INSERT INTO crewschedulingoffice_bot_userdetail (crewcat, CrewQual, EMPNO, logtime, phone, text, chatId, empsign, RECID, TEL_USERNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
           rankCodes,
           '',
           staffNumber,
@@ -129,7 +129,7 @@ async function botReg(STRempID, txtMsg, strchatId, strTEL_USERNAME) {
 }
 /*
 const connection = db;
-    db.query('INSERT INTO CrewSchedulingOffice_bot_UserDetail (crewcat, CrewQual,  EMPNO, logtime,  phone, text, chatId,  empsign, RECID,TEL_USERNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+    db.query('INSERT INTO crewschedulingoffice_bot_userdetail (crewcat, CrewQual,  EMPNO, logtime,  phone, text, chatId,  empsign, RECID,TEL_USERNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
     rankCodes,
       '',
       staffNumber,

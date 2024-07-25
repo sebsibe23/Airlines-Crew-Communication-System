@@ -5,7 +5,7 @@ const router = express.Router();
 async function empnoreturn(strTEL_USERNAME) {
   try {
     console.log(`Fetching EMPNO for chatId: ${strTEL_USERNAME}`);
-    const sqlQuery = "SELECT EMPNO FROM CrewSchedulingOffice_bot_UserDetail WHERE chatId = ? AND CrewQual NOT IN ('OTP user', 'MP user')";
+    const sqlQuery = "SELECT EMPNO FROM crewschedulingoffice_bot_userdetail WHERE chatId = ? AND CrewQual NOT IN ('OTP user', 'MP user')";
     
 
     const [rows] = await db.promise().query(sqlQuery, [strTEL_USERNAME]);

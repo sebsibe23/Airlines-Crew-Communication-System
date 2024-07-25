@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 async function checkBotuser(user_name) {
   try {
-    const [rows, fields] = await db.promise().query(`SELECT TEL_USERNAME FROM CrewSchedulingOffice_bot_UserDetail WHERE chatId = '${user_name}'`);
+    const [rows, fields] = await db.promise().query(`SELECT TEL_USERNAME FROM crewschedulingoffice_bot_userdetail WHERE chatId = '${user_name}'`);
 
     if (rows.length > 0) {
       return "YES";

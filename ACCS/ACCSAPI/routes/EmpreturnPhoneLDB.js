@@ -6,7 +6,7 @@ async function ReturnPhoneNumber(strTEL_USERNAME) {
   try {
     console.log(`Fetching phone number for chatId: ${strTEL_USERNAME}`);
     
-    const sqlQuery = "SELECT phone FROM CrewSchedulingOffice_bot_UserDetail WHERE chatId = ? AND CrewQual NOT IN ('OTP user', 'MP user')";
+    const sqlQuery = "SELECT phone FROM crewschedulingoffice_bot_userdetail WHERE chatId = ? AND CrewQual NOT IN ('OTP user', 'MP user')";
     const [rows] = await db.promise().query(sqlQuery, [strTEL_USERNAME]);
     
     if (rows.length > 0) {
